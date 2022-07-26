@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import colors from "tailwindcss/colors";
@@ -8,7 +9,7 @@ interface Props {
   asks: number[][];
 }
 
-const DepthChart = ({ bids, asks }: Props) => {
+const DepthChart = forwardRef(({ bids, asks }: Props, ref) => {
   const seriesOptions = {
     ...options,
     series: [
@@ -25,7 +26,14 @@ const DepthChart = ({ bids, asks }: Props) => {
     ],
   };
 
-  return <HighchartsReact highcharts={Highcharts} options={seriesOptions} />;
-};
+  return (
+    <HighchartsReact
+      // @ts-ignore
+      ref={ref}
+      highcharts={Highcharts}
+      options={seriesOptions}
+    />
+  );
+});
 
 export default DepthChart;

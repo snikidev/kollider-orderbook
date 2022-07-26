@@ -77,7 +77,14 @@ const options = {
     },
   },
   tooltip: {
-    headerFormat: '<span class="bg-white">Price: {point.key}</span><br/>',
+    // @ts-ignore
+    formatter: function () {
+      return `<div class='bg-white'>Price: ${new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        // @ts-ignore
+      }).format(this.key)}</div>`;
+    },
     valueDecimals: 2,
     backgroundColor: colors.white,
     borderWidth: 0,

@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import useWebSocket from "react-use-websocket";
 
-const useOrderbook = () => {
+export enum CurrencyPair {
+  BTCUSD = "BTCUSD.PERP",
+  ETHUSD = "ETHUSD.PERP",
+}
+
+const useOrderbook = (currencyPair: CurrencyPair) => {
   const [orderbookData, setOrderbookData] = useState({ bids: {}, asks: {} });
   const { sendJsonMessage, lastJsonMessage } = useWebSocket(
     // @ts-ignore
@@ -26,20 +31,20 @@ const useOrderbook = () => {
         }));
       }
     }
-  }, [lastJsonMessage, setOrderbookData]);
+  }, [lastJsonMessage, setOrderbookData, currencyPair]);
 
   useEffect(() => {
+    setOrderbookData({ bids: {}, asks: {} });
     if (sendJsonMessage) {
       sendJsonMessage({
         type: "subscribe",
         // @ts-ignore
         channels: ["orderbook_level2"],
-        // TODO: make those passable as props
         // @ts-ignore
-        symbols: ["BTCUSD.PERP"],
+        symbols: [currencyPair],
       });
     }
-  }, [sendJsonMessage]);
+  }, [sendJsonMessage, currencyPair]);
 
   return orderbookData;
 };
